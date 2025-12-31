@@ -12,6 +12,7 @@
             --bg-light: #fefae0;
             --white: #ffffff;
             --text-dark: #2d3436;
+            --danger: #e63946;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
@@ -54,15 +55,20 @@
         .product-card {
             background: var(--white); border-radius: 20px; overflow: hidden;
             box-shadow: var(--shadow); transition: 0.3s; border: 1px solid rgba(0,0,0,0.02);
-            display: flex; flex-direction: column; height: 100%;
+            display: flex; flex-direction: column; height: 100%; position: relative;
         }
-        .product-card:hover { transform: translateY(-8px); }
 
-        .image-container { position: relative; height: 180px; width: 100%; cursor: zoom-in; overflow: hidden; background: #f9f9f9; }
-        @media (min-width: 768px) { .image-container { height: 250px; } }
-        .product-image { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .product-card:hover .product-image { transform: scale(1.1); }
+        .stock-badge {
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7);
+            color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; z-index: 5;
+        }
+
+        .image-slider { position: relative; height: 180px; width: 100%; overflow: hidden; background: #f9f9f9; }
+        @media (min-width: 768px) { .image-slider { height: 250px; } }
         
+        .slider-img { width: 100%; height: 100%; object-fit: cover; display: none; cursor: zoom-in; }
+        .slider-img.active { display: block; }
+
         .product-info { padding: 15px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-title { font-size: 0.95rem; font-weight: bold; margin-bottom: 5px; color: var(--secondary-color); height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .product-price { color: var(--primary-color); font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; }
@@ -71,43 +77,30 @@
             background: var(--secondary-color); color: white; border: none; padding: 12px;
             border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;
         }
+        .add-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        .cart-section {
-            background: var(--white); border-radius: 25px; padding: 25px;
-            margin-top: 50px; box-shadow: var(--shadow); border: 2px solid var(--secondary-color);
-        }
+        .cart-section { background: var(--white); border-radius: 25px; padding: 25px; margin-top: 50px; box-shadow: var(--shadow); border: 2px solid var(--secondary-color); }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
         .qty-controls { display: flex; align-items: center; gap: 10px; }
         .qty-btn { background: var(--secondary-color); color: white; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
-
+        
         .totals-area { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 15px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1.1rem; }
+        .discount-row { color: var(--danger); font-weight: bold; display: none; }
         .total-row.grand-total { border-top: 2px dashed #ddd; padding-top: 10px; font-size: 1.4rem; font-weight: bold; color: var(--secondary-color); }
-
+        
         .order-form { display: grid; gap: 12px; margin-top: 25px; }
-        .order-form input, .order-form select, .order-form textarea { 
-            padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; width: 100%; 
-        }
+        .order-form input, .order-form select, .order-form textarea { padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; width: 100%; }
+        
+        .promo-area { display: flex; gap: 8px; margin-bottom: 15px; }
+        .promo-btn { background: var(--primary-color); color: white; border: none; padding: 0 20px; border-radius: 12px; cursor: pointer; font-weight: bold; }
 
-        .whatsapp-btn {
-            background: #25d366; color: white; border: none; padding: 18px;
-            border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-            transition: 0.3s; margin-top: 10px;
-        }
+        .whatsapp-btn { background: #25d366; color: white; border: none; padding: 18px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
 
-        .modal {
-            display: none; position: fixed; z-index: 9999; left: 0; top: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            justify-content: center; align-items: center;
-        }
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
         .modal-content { max-width: 90%; max-height: 80vh; border-radius: 15px; }
         .close-modal { position: absolute; top: 20px; left: 20px; color: white; font-size: 40px; cursor: pointer; }
-
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--secondary-color); color: white;
-            padding: 12px 30px; border-radius: 50px; display: none; z-index: 10000;
-        }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--secondary-color); color: white; padding: 12px 30px; border-radius: 50px; display: none; z-index: 10000; }
     </style>
 </head>
 <body>
@@ -129,7 +122,7 @@
             <button class="cat-btn" onclick="filterCategory('إكسسوارات', this)">إكسسوارات</button>
         </div>
 
-        <div class="products-grid" id="products-container"></div>
+        <div id="products-container" class="products-grid"></div>
 
         <div class="cart-section" id="cart">
             <h2>🛒 سلة التسوق</h2>
@@ -142,6 +135,17 @@
                     <span>ثمن المنتجات:</span>
                     <span><span id="sub-total">0</span> ج.م</span>
                 </div>
+
+                <div class="promo-area">
+                    <input type="text" id="promo-code" placeholder="كود الخصم (reqa)">
+                    <button class="promo-btn" onclick="applyPromo()">تفعيل</button>
+                </div>
+
+                <div class="total-row discount-row" id="discount-display">
+                    <span>خصم (10%):</span>
+                    <span>-<span id="discount-amount">0</span> ج.م</span>
+                </div>
+
                 <div class="total-row">
                     <span>مصاريف الشحن:</span>
                     <span><span id="shipping-cost">0</span> ج.م</span>
@@ -154,33 +158,17 @@
 
             <div class="order-form">
                 <h3>🚚 بيانات التوصيل</h3>
-                <input type="text" id="customer-name" placeholder="الاسم بالكامل">
-                
-                <input type="tel" id="phone_field" placeholder="رقم الموبايل (واتساب)">
-                
-                <select id="customer-city" onchange="updateUI()">
+                <input type="text" id="customer-name" placeholder="الاسم بالكامل" oninput="saveUserData()">
+                <select id="customer-city" onchange="updateUI(); saveUserData()">
                     <option value="" data-price="0">-- اختر المحافظة --</option>
                     <option value="القاهرة" data-price="50">القاهرة (50 ج.م)</option>
                     <option value="الجيزة" data-price="50">الجيزة (50 ج.م)</option>
                     <option value="الإسكندرية" data-price="60">الإسكندرية (60 ج.م)</option>
-                    <option value="القليوبية" data-price="55">القليوبية (55 ج.م)</option>
-                    <option value="الدقهلية" data-price="65">الدقهلية (65 ج.م)</option>
-                    <option value="المنوفية" data-price="60">المنوفية (60 ج.م)</option>
-                    <option value="البحيرة" data-price="65">البحيرة (65 ج.م)</option>
-                    <option value="الشرقية" data-price="65">الشرقية (65 ج.م)</option>
-                    <option value="الغربية" data-price="65">الغربية (65 ج.م)</option>
-                    <option value="مدن القناة" data-price="70">مدن القناة (70 ج.م)</option>
-                    <option value="المنيا/بني سويف" data-price="80">المنيا / بني سويف (80 ج.م)</option>
-                    <option value="أسيوط/سوهاج/قنا" data-price="95">أسيوط / سوهاج / قنا (95 ج.م)</option>
-                    <option value="الأقصر/أسوان" data-price="110">الأقصر وأسوان (110 ج.م)</option>
+                    <option value="صعيد مصر" data-price="95">الصعيد (95 ج.م)</option>
                 </select>
-
-                <input type="text" id="customer-address" placeholder="العنوان بالتفصيل">
+                <input type="text" id="customer-address" placeholder="العنوان بالتفصيل" oninput="saveUserData()">
                 <textarea id="customer-note" rows="2" placeholder="ملاحظات إضافية؟"></textarea>
-                
-                <button class="whatsapp-btn" onclick="sendToWhatsapp()">
-                    إرسال الطلب عبر الواتساب
-                </button>
+                <button class="whatsapp-btn" onclick="sendToWhatsapp()">إرسال الطلب عبر الواتساب</button>
             </div>
         </div>
     </div>
@@ -193,55 +181,109 @@
     <div id="toast" class="toast">تمت الإضافة للسلة بنجاح ✨</div>
 
     <script>
+        // مصفوفة المنتجات مع المخزون (stock)
         const products = [
-            { id: 1, name: "نتيجة مكتب مودرن 2025", price: 150, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
+            { 
+                id: 1, 
+                name: "نتيجة مكتب مودرن 2025", 
+                price: 150, 
+                stock: 3, // عدد القطع المتاحة
+                category: "نتائج", 
+                images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] 
+            },
+            { 
+                id: 2, 
+                name: "بوكس هدايا ", 
+                price: 350, 
+                stock: 0, // مثال لمنتج غير متوفر
+                category: "هدايا", 
+                images: ["https://via.placeholder.com/300x250/d4a373/ffffff?text=Roqa+Gift"] 
+            }
         ];
 
         let cart = JSON.parse(localStorage.getItem('roqa_cart')) || {};
+        let isDiscountApplied = false;
+
+        function saveUserData() {
+            const userData = {
+                name: document.getElementById('customer-name').value,
+                city: document.getElementById('customer-city').value,
+                address: document.getElementById('customer-address').value
+            };
+            localStorage.setItem('roqa_user_data', JSON.stringify(userData));
+        }
+
+        function loadUserData() {
+            const savedData = JSON.parse(localStorage.getItem('roqa_user_data'));
+            if (savedData) {
+                document.getElementById('customer-name').value = savedData.name || '';
+                document.getElementById('customer-city').value = savedData.city || '';
+                document.getElementById('customer-address').value = savedData.address || '';
+            }
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('promo-code').value.trim().toLowerCase();
+            if (code === "reqa") {
+                isDiscountApplied = true;
+                alert("تم تفعيل خصم 10% بنجاح! 😍");
+            } else {
+                isDiscountApplied = false;
+                alert("كود الخصم غير صحيح.");
+            }
+            updateUI();
+        }
 
         function renderProducts(data = products) {
             const container = document.getElementById('products-container');
-            if(data.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">لا توجد منتجات مطابقة للبحث.</p>';
-                return;
-            }
-            container.innerHTML = data.map(p => `
+            container.innerHTML = data.map(p => {
+                const isOut = p.stock <= 0;
+                return `
                 <div class="product-card">
-                    <div class="image-container" onclick="openGallery('${p.images[0]}')">
-                        <img src="${p.images[0]}" class="product-image" loading="lazy">
+                    <div class="stock-badge">${isOut ? 'نفذت الكمية' : 'متاح: ' + p.stock}</div>
+                    <div class="image-slider">
+                        <img src="${p.images[0]}" class="slider-img active" 
+                             style="${isOut ? 'filter: grayscale(1);' : ''}" 
+                             onclick="openGallery('${p.images[0]}')">
                     </div>
                     <div class="product-info">
                         <span class="product-title">${p.name}</span>
                         <div class="product-price">${p.price} ج.م</div>
-                        <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
+                        <button class="add-btn" 
+                                onclick="addToCart(${p.id})" 
+                                ${isOut ? 'disabled' : ''}>
+                            ${isOut ? 'غير متوفر حالياً' : 'أضف للسلة'}
+                        </button>
                     </div>
                 </div>
-            `).join('');
-        }
-
-        function filterCategory(cat, btn) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderProducts(cat === 'الكل' ? products : products.filter(p => p.category === cat));
-        }
-
-        function filterProducts() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            renderProducts(products.filter(p => p.name.toLowerCase().includes(term)));
+            `}).join('');
         }
 
         function addToCart(id) {
             const p = products.find(x => x.id === id);
-            cart[id] = cart[id] ? { ...cart[id], qty: cart[id].qty + 1 } : { ...p, qty: 1 };
-            saveAndUpdate();
-            showToast();
+            if (p.stock > 0) {
+                p.stock--; // تقليل المخزون في الواجهة
+                cart[id] = cart[id] ? { ...cart[id], qty: cart[id].qty + 1 } : { ...p, qty: 1 };
+                saveAndUpdate();
+                renderProducts(); // تحديث الأزرار
+                showToast();
+            }
         }
 
         function changeQty(id, delta) {
+            const p = products.find(x => x.id === id);
             if (cart[id]) {
+                if (delta > 0 && p.stock <= 0) {
+                    alert("نعتذر، لا توجد قطع إضافية في المخزون!");
+                    return;
+                }
+                
+                if (delta > 0) p.stock--; else p.stock++;
+                
                 cart[id].qty += delta;
                 if (cart[id].qty <= 0) delete cart[id];
                 saveAndUpdate();
+                renderProducts();
             }
         }
 
@@ -275,51 +317,46 @@
             const citySelect = document.getElementById('customer-city');
             const shipping = parseInt(citySelect.options[citySelect.selectedIndex].getAttribute('data-price')) || 0;
             
+            let discount = isDiscountApplied ? subtotal * 0.10 : 0;
+            document.getElementById('discount-display').style.display = isDiscountApplied ? 'flex' : 'none';
+
             document.getElementById('sub-total').innerText = subtotal;
+            document.getElementById('discount-amount').innerText = discount.toFixed(0);
             document.getElementById('shipping-cost').innerText = shipping;
-            document.getElementById('final-total').innerText = subtotal + shipping;
+            document.getElementById('final-total').innerText = (subtotal - discount + shipping).toFixed(0);
         }
 
         function sendToWhatsapp() {
-            // الطريقة الأكثر دقة للحصول على القيم لضمان ظهور الرقم
-            const name = document.querySelector('#customer-name').value;
-            const phone = document.querySelector('#phone_field').value; // التقاط الرقم من المعرف الجديد
-            const city = document.querySelector('#customer-city').value;
-            const addr = document.querySelector('#customer-address').value;
-            const note = document.querySelector('#customer-note').value;
+            const name = document.getElementById('customer-name').value;
+            const city = document.getElementById('customer-city').value;
+            const addr = document.getElementById('customer-address').value;
             const items = Object.values(cart);
 
-            if (!name || !phone || !city || !addr || items.length === 0) {
-                alert("برجاء إدخال الاسم، الموبايل، العنوان، واختيار منتج واحد على الأقل.");
+            if (!name || !city || !addr || items.length === 0) {
+                alert("يرجى إكمال البيانات واختيار منتجات.");
                 return;
             }
 
-            let subTotal = document.getElementById('sub-total').innerText;
-            let shipCost = document.getElementById('shipping-cost').innerText;
-            let finalTotal = document.getElementById('final-total').innerText;
+            let msg = `*طلب جديد من Roqa Boutique*%0A%0A👤 *الاسم:* ${name}%0A📍 *المحافظة:* ${city}%0A🏠 *العنوان:* ${addr}%0A%0A🛒 *المنتجات:*%0A`;
+            items.forEach(i => msg += `• ${i.name} (×${i.qty})%0A`);
+            
+            if(isDiscountApplied) msg += `%0A🎟️ *كود الخصم:* reqa (تم خصم 10%25)`;
+            msg += `%0A💰 *الإجمالي النهائي:* ${document.getElementById('final-total').innerText} ج.م`;
 
-            // بناء الرسالة يدوياً لضمان كل خانة
-            let msg = "*طلب جديد من Roqa Boutique*\n\n";
-            msg += "👤 الاسم: " + name + "\n";
-            msg += "📞 الموبايل: " + phone + "\n"; // السطر المسؤول عن ظهور الرقم
-            msg += "📍 المحافظة: " + city + "\n";
-            msg += "🏠 العنوان: " + addr + "\n";
-            if(note) msg += "📝 ملاحظة: " + note + "\n";
-            
-            msg += "\n🛒 المنتجات:\n";
-            items.forEach(i => {
-                msg += "• " + i.name + " (عدد " + i.qty + ")\n";
-            });
-            
-            msg += "\n💵 الحساب: " + subTotal + " ج.م";
-            msg += "\n🚚 الشحن: " + shipCost + " ج.م";
-            msg += "\n💰 الإجمالي النهائي: " + finalTotal + " ج.م";
+            window.open(`https://wa.me/201106091519?text=${msg}`, '_blank');
+        }
 
-            // تحويل النص ليكون متوافقاً مع رابط واتساب
-            const encodedMsg = encodeURIComponent(msg);
-            const fullUrl = "https://api.whatsapp.com/send?phone=201106091519&text=" + encodedMsg;
-            
-            window.open(fullUrl, '_blank');
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filtered = cat === 'الكل' ? products : products.filter(p => p.category === cat);
+            renderProducts(filtered);
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+            renderProducts(filtered);
         }
 
         function showToast() {
@@ -335,8 +372,12 @@
 
         function closeGallery() { document.getElementById('galleryModal').style.display = 'none'; }
 
-        renderProducts();
-        updateUI();
+        // عند التحميل
+        window.onload = () => {
+            renderProducts();
+            updateUI();
+            loadUserData();
+        };
     </script>
 </body>
 </html>
