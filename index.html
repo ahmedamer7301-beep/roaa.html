@@ -30,7 +30,6 @@
 
         .container { max-width: 1100px; margin: -30px auto 40px; padding: 0 15px; }
 
-        /* Search & Categories */
         .search-bar {
             background: var(--white); padding: 5px; border-radius: 15px;
             box-shadow: var(--shadow); margin-bottom: 25px; display: flex;
@@ -49,7 +48,6 @@
         }
         .cat-btn.active { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
 
-        /* Products Grid */
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; } }
 
@@ -73,9 +71,7 @@
             background: var(--secondary-color); color: white; border: none; padding: 12px;
             border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s;
         }
-        .add-btn:active { transform: scale(0.95); }
 
-        /* Cart Section */
         .cart-section {
             background: var(--white); border-radius: 25px; padding: 25px;
             margin-top: 50px; box-shadow: var(--shadow); border: 2px solid var(--secondary-color);
@@ -84,12 +80,10 @@
         .qty-controls { display: flex; align-items: center; gap: 10px; }
         .qty-btn { background: var(--secondary-color); color: white; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
 
-        /* Totals */
         .totals-area { margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 15px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1.1rem; }
         .total-row.grand-total { border-top: 2px dashed #ddd; padding-top: 10px; font-size: 1.4rem; font-weight: bold; color: var(--secondary-color); }
 
-        /* Form */
         .order-form { display: grid; gap: 12px; margin-top: 25px; }
         .order-form input, .order-form select, .order-form textarea { 
             padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; width: 100%; 
@@ -100,9 +94,7 @@
             border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
             transition: 0.3s; margin-top: 10px;
         }
-        .whatsapp-btn:hover { background: #128c7e; }
 
-        /* Modal & Toast */
         .modal {
             display: none; position: fixed; z-index: 9999; left: 0; top: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.9);
@@ -164,6 +156,8 @@
                 <h3>🚚 بيانات التوصيل</h3>
                 <input type="text" id="customer-name" placeholder="الاسم بالكامل">
                 
+                <input type="tel" id="phone_field" placeholder="رقم الموبايل (واتساب)">
+                
                 <select id="customer-city" onchange="updateUI()">
                     <option value="" data-price="0">-- اختر المحافظة --</option>
                     <option value="القاهرة" data-price="50">القاهرة (50 ج.م)</option>
@@ -176,12 +170,12 @@
                     <option value="الشرقية" data-price="65">الشرقية (65 ج.م)</option>
                     <option value="الغربية" data-price="65">الغربية (65 ج.م)</option>
                     <option value="مدن القناة" data-price="70">مدن القناة (70 ج.م)</option>
-                    <option value="صعيد مصر 1" data-price="80">المنيا / بني سويف (80 ج.م)</option>
-                    <option value="صعيد مصر 2" data-price="95">أسيوط / سوهاج / قنا (95 ج.م)</option>
-                    <option value="الأقصر وأسوان" data-price="110">الأقصر وأسوان (110 ج.م)</option>
+                    <option value="المنيا/بني سويف" data-price="80">المنيا / بني سويف (80 ج.م)</option>
+                    <option value="أسيوط/سوهاج/قنا" data-price="95">أسيوط / سوهاج / قنا (95 ج.م)</option>
+                    <option value="الأقصر/أسوان" data-price="110">الأقصر وأسوان (110 ج.م)</option>
                 </select>
 
-                <input type="text" id="customer-address" placeholder="العنوان بالتفصيل (المنطقة - الشارع - رقم المنزل)">
+                <input type="text" id="customer-address" placeholder="العنوان بالتفصيل">
                 <textarea id="customer-note" rows="2" placeholder="ملاحظات إضافية؟"></textarea>
                 
                 <button class="whatsapp-btn" onclick="sendToWhatsapp()">
@@ -199,10 +193,9 @@
     <div id="toast" class="toast">تمت الإضافة للسلة بنجاح ✨</div>
 
     <script>
-        // قاعدة بيانات المنتجات
         const products = [
-            { id: 1, name: "نتيجة مكتب مودرن 2025", price: 850, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
-                   ];
+            { id: 1, name: "نتيجة مكتب مودرن 2025", price: 150, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
+        ];
 
         let cart = JSON.parse(localStorage.getItem('roqa_cart')) || {};
 
@@ -288,28 +281,45 @@
         }
 
         function sendToWhatsapp() {
-            const name = document.getElementById('customer-name').value;
-            const city = document.getElementById('customer-city').value;
-            const addr = document.getElementById('customer-address').value;
+            // الطريقة الأكثر دقة للحصول على القيم لضمان ظهور الرقم
+            const name = document.querySelector('#customer-name').value;
+            const phone = document.querySelector('#phone_field').value; // التقاط الرقم من المعرف الجديد
+            const city = document.querySelector('#customer-city').value;
+            const addr = document.querySelector('#customer-address').value;
+            const note = document.querySelector('#customer-note').value;
             const items = Object.values(cart);
 
-            if (!name || !city || !addr || items.length === 0) {
-                alert("يرجى إكمال البيانات واختيار منتج واحد على الأقل.");
+            if (!name || !phone || !city || !addr || items.length === 0) {
+                alert("برجاء إدخال الاسم، الموبايل، العنوان، واختيار منتج واحد على الأقل.");
                 return;
             }
 
-            let msg = `*طلب جديد من Roqa Boutique*%0A%0A`;
-            msg += `👤 *الاسم:* ${name}%0A📍 *المحافظة:* ${city}%0A🏠 *العنوان:* ${addr}%0A%0A🛒 *المنتجات:*%0A`;
-            items.forEach(i => msg += `• ${i.name} (×${i.qty})%0A`);
-            msg += `%0A💵 *المنتجات:* ${document.getElementById('sub-total').innerText} ج.م`;
-            msg += `%0A🚚 *الشحن:* ${document.getElementById('shipping-cost').innerText} ج.م`;
-            msg += `%0A💰 *الإجمالي النهائي:* ${document.getElementById('final-total').innerText} ج.م`;
+            let subTotal = document.getElementById('sub-total').innerText;
+            let shipCost = document.getElementById('shipping-cost').innerText;
+            let finalTotal = document.getElementById('final-total').innerText;
 
-            window.open(`https://wa.me/201066178604?text=${msg}`, '_blank');
+            // بناء الرسالة يدوياً لضمان كل خانة
+            let msg = "*طلب جديد من Roqa Boutique*\n\n";
+            msg += "👤 الاسم: " + name + "\n";
+            msg += "📞 الموبايل: " + phone + "\n"; // السطر المسؤول عن ظهور الرقم
+            msg += "📍 المحافظة: " + city + "\n";
+            msg += "🏠 العنوان: " + addr + "\n";
+            if(note) msg += "📝 ملاحظة: " + note + "\n";
             
-            // تصفير السلة بعد الطلب
-            cart = {};
-            saveAndUpdate();
+            msg += "\n🛒 المنتجات:\n";
+            items.forEach(i => {
+                msg += "• " + i.name + " (عدد " + i.qty + ")\n";
+            });
+            
+            msg += "\n💵 الحساب: " + subTotal + " ج.م";
+            msg += "\n🚚 الشحن: " + shipCost + " ج.م";
+            msg += "\n💰 الإجمالي النهائي: " + finalTotal + " ج.م";
+
+            // تحويل النص ليكون متوافقاً مع رابط واتساب
+            const encodedMsg = encodeURIComponent(msg);
+            const fullUrl = "https://api.whatsapp.com/send?phone=201106091519&text=" + encodedMsg;
+            
+            window.open(fullUrl, '_blank');
         }
 
         function showToast() {
@@ -325,7 +335,6 @@
 
         function closeGallery() { document.getElementById('galleryModal').style.display = 'none'; }
 
-        // تهيئة المتجر
         renderProducts();
         updateUI();
     </script>
