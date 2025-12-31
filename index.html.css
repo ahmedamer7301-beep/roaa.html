@@ -201,7 +201,7 @@
     <script>
         // قاعدة بيانات المنتجات
         const products = [
-            { id: 1, name: "نتيجة مكتب مودرن 2025", price: 850, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
+            { id: 1, name: "نتيجة مكتب مودرن 2025", price: 150, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
            
         ];
 
@@ -306,7 +306,7 @@
             msg += `%0A🚚 *الشحن:* ${document.getElementById('shipping-cost').innerText} ج.م`;
             msg += `%0A💰 *الإجمالي النهائي:* ${document.getElementById('final-total').innerText} ج.م`;
 
-            window.open(`https://wa.me/201066178604?text=${msg}`, '_blank');
+            window.open(`https://wa.me/201106091519?text=${msg}`, '_blank');
             
             // تصفير السلة بعد الطلب
             cart = {};
