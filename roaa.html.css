@@ -202,10 +202,7 @@
         // قاعدة بيانات المنتجات
         const products = [
             { id: 1, name: "نتيجة مكتب مودرن 2025", price: 850, category: "نتائج", images: ["https://i.postimg.cc/W1XrmR64/IMG-20251224-WA0043.jpg"] },
-            { id: 4, name: "نوت بوك فاخر مطرز", price: 240, category: "نتائج", images: ["https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400"] },
-            { id: 5, name: "بوكس هدايا مفاجآت", price: 450, category: "هدايا", images: ["https://images.unsplash.com/photo-1549465220-1d8c9d9c6703?w=400"] },
-            { id: 6, name: "سلسال رقيق ذهبي", price: 180, category: "إكسسوارات", images: ["https://images.unsplash.com/photo-1535633302703-9420414421ee?w=400"] }
-        ];
+                   ];
 
         let cart = JSON.parse(localStorage.getItem('roqa_cart')) || {};
 
